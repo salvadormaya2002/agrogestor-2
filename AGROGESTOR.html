@@ -1938,7 +1938,13 @@ function mostrarVista(v){
   if(v==='comparacion')initCompInputs();
   if(v==='benchmarking')document.getElementById('bm-depto-nombre').textContent=perfil.depto||'Gualeguaychú';
 }
-function entrarApp(){mostrarVista('dashboard');}
+function entrarApp(){
+  if(window._currentUser){
+    mostrarVista('dashboard');
+  } else {
+    mostrarAuthModal();
+  }
+}
 
 // ===== TABS =====
 function switchTab(modulo, tabId){
@@ -5227,18 +5233,16 @@ document.addEventListener('DOMContentLoaded', function() {
   window._auth.onAuthStateChanged(function(user) {
     window._currentUser = user;
     if(user) {
-      // Ocultar modal
       const modal = document.getElementById('auth-modal');
       if(modal) modal.style.display = 'none';
-      // Cargar datos
       setTimeout(function() {
         cargarDatosNube();
         actualizarUIUsuario(user);
         agregarBotonCerrarSesion();
+        mostrarVista('dashboard');
       }, 200);
-    } else {
-      mostrarAuthModal();
     }
+    // Si no hay usuario, la landing page queda visible (no mostramos el modal automáticamente)
   });
 });
 
@@ -5313,7 +5317,8 @@ async function registrarFirebase() {
 
 async function cerrarSesionFirebase() {
   await getAuth().signOut();
-  mostrarAuthModal();
+  window._currentUser = null;
+  mostrarVista('landing');
 }
 
 function actualizarUIUsuario(user) {
