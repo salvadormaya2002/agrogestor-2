@@ -479,6 +479,148 @@ html,body{overflow-x:hidden;}
 .sf-cta-note{margin-top:16px;font-size:11px;color:var(--text-muted);}
 .sf-cta-note span{color:var(--neon);}
 
+/* ── PLANES ───────────────────────────── */
+.sf-plans-wrap{
+  background:var(--dark-2);
+  border-top:1px solid rgba(0,232,122,0.06);
+  padding:90px 40px;
+  position:relative;
+}
+.sf-plans-inner{max-width:1100px;margin:0 auto;}
+.sf-plans-header{
+  text-align:center;
+  margin-bottom:60px;
+}
+.sf-plans-label{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--neon);
+  margin-bottom:16px;
+}
+.sf-plans-h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(36px,4vw,56px);
+  font-weight:800;line-height:1.05;
+  color:white;text-transform:uppercase;letter-spacing:-.5px;
+  margin-bottom:14px;
+}
+.sf-plans-h2 span{color:var(--neon);}
+.sf-plans-sub{
+  font-size:15px;color:var(--text-muted);
+  max-width:520px;margin:0 auto;line-height:1.7;
+}
+.sf-plans-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+  align-items:start;
+}
+.sf-plan-card{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:18px;
+  padding:32px 28px;
+  position:relative;
+  transition:border-color .25s,transform .25s;
+}
+.sf-plan-card:hover{
+  border-color:rgba(0,232,122,0.18);
+  transform:translateY(-4px);
+}
+.sf-plan-highlight{
+  background:rgba(0,232,122,0.04);
+  border-color:rgba(0,232,122,0.3);
+  transform:scale(1.03);
+}
+.sf-plan-highlight:hover{
+  border-color:rgba(0,232,122,0.55);
+  transform:scale(1.03) translateY(-4px);
+}
+.sf-plan-badge{
+  display:inline-block;
+  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dark);background:var(--neon);
+  padding:3px 10px;border-radius:999px;
+  margin-bottom:18px;
+}
+.sf-plan-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:700;letter-spacing:.3px;
+  color:rgba(255,255,255,0.55);
+  text-transform:uppercase;margin-bottom:18px;
+}
+.sf-plan-name-neon{color:var(--neon);}
+.sf-plan-price{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:54px;font-weight:800;line-height:1;
+  color:white;letter-spacing:-1px;margin-bottom:4px;
+}
+.sf-plan-period{
+  font-size:12px;color:var(--text-muted);
+  margin-bottom:28px;
+}
+.sf-plan-divider{
+  height:1px;
+  background:rgba(255,255,255,0.06);
+  margin-bottom:24px;
+}
+.sf-plan-items{
+  list-style:none;
+  display:flex;flex-direction:column;gap:10px;
+  margin-bottom:32px;
+  min-height:180px;
+}
+.sf-plan-ok{
+  font-size:13px;color:rgba(255,255,255,0.7);
+  display:flex;align-items:flex-start;gap:8px;
+}
+.sf-plan-ok::before{
+  content:'✓';
+  color:var(--neon);font-weight:700;
+  flex-shrink:0;margin-top:1px;
+}
+.sf-plan-no{
+  font-size:13px;color:rgba(255,255,255,0.2);
+  display:flex;align-items:flex-start;gap:8px;
+  text-decoration:line-through;
+}
+.sf-plan-no::before{
+  content:'—';
+  color:rgba(255,255,255,0.15);
+  flex-shrink:0;margin-top:1px;
+}
+.sf-plan-btn{
+  width:100%;padding:13px 20px;
+  border-radius:10px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+  border:none;
+}
+.sf-plan-btn-ghost{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.14);
+  color:rgba(255,255,255,0.55);
+}
+.sf-plan-btn-ghost:hover{
+  border-color:rgba(255,255,255,0.35);
+  color:white;background:rgba(255,255,255,0.04);
+}
+.sf-plan-btn-neon{
+  background:var(--neon);
+  color:#040C08;
+}
+.sf-plan-btn-neon:hover{
+  background:#1fffa0;
+  box-shadow:0 4px 24px rgba(0,232,122,0.35);
+}
+@media(max-width:960px){
+  .sf-plans-wrap{padding:64px 20px;}
+  .sf-plans-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto;}
+  .sf-plan-highlight{transform:scale(1);}
+  .sf-plan-highlight:hover{transform:translateY(-4px);}
+}
+
 /* ── FOOTER ───────────────────────────── */
 .sf-footer{
   background:#020805;padding:22px 40px;
@@ -826,14 +968,15 @@ html,body{overflow-x:hidden;}
           <div class="sf-plan-name">Gratis</div>
           <div class="sf-plan-price">$0</div>
           <div class="sf-plan-period">Para siempre</div>
+          <div class="sf-plan-divider"></div>
           <ul class="sf-plan-items">
-            <li class="sf-plan-ok">✓ Calculadora de rentabilidad</li>
-            <li class="sf-plan-ok">✓ Diagnóstico básico</li>
-            <li class="sf-plan-ok">✓ Precio del ternero</li>
-            <li class="sf-plan-ok">✓ Asistente IA</li>
-            <li class="sf-plan-no">— Rodeo, sanidad, forraje</li>
-            <li class="sf-plan-no">— Mapa satelital</li>
-            <li class="sf-plan-no">— Modo trabajador</li>
+            <li class="sf-plan-ok">Calculadora de rentabilidad</li>
+            <li class="sf-plan-ok">Diagnóstico básico</li>
+            <li class="sf-plan-ok">Precio del ternero</li>
+            <li class="sf-plan-ok">Asistente IA</li>
+            <li class="sf-plan-no">Rodeo, sanidad, forraje</li>
+            <li class="sf-plan-no">Mapa satelital</li>
+            <li class="sf-plan-no">Modo trabajador</li>
           </ul>
           <button class="sf-plan-btn sf-plan-btn-ghost" onclick="entrarApp()">Empezar gratis</button>
         </div>
@@ -843,14 +986,15 @@ html,body{overflow-x:hidden;}
           <div class="sf-plan-name sf-plan-name-neon">Plan Productor</div>
           <div class="sf-plan-price">A definir</div>
           <div class="sf-plan-period">mensual · o anual con descuento</div>
+          <div class="sf-plan-divider"></div>
           <ul class="sf-plan-items">
-            <li class="sf-plan-ok">✓ Todo lo gratuito</li>
-            <li class="sf-plan-ok">✓ Rodeo, sanidad, forraje</li>
-            <li class="sf-plan-ok">✓ Mapa satelital de potreros</li>
-            <li class="sf-plan-ok">✓ Modo trabajador (3 usuarios)</li>
-            <li class="sf-plan-ok">✓ Calendario y alertas automáticas</li>
-            <li class="sf-plan-ok">✓ Exportar PDF y Excel</li>
-            <li class="sf-plan-ok">✓ Clima integrado</li>
+            <li class="sf-plan-ok">Todo lo gratuito</li>
+            <li class="sf-plan-ok">Rodeo, sanidad, forraje</li>
+            <li class="sf-plan-ok">Mapa satelital de potreros</li>
+            <li class="sf-plan-ok">Modo trabajador (3 usuarios)</li>
+            <li class="sf-plan-ok">Calendario y alertas automáticas</li>
+            <li class="sf-plan-ok">Exportar PDF y Excel</li>
+            <li class="sf-plan-ok">Clima integrado</li>
           </ul>
           <button class="sf-plan-btn sf-plan-btn-neon" onclick="entrarApp()">Comenzar ahora →</button>
         </div>
@@ -859,13 +1003,14 @@ html,body{overflow-x:hidden;}
           <div class="sf-plan-name">Plan Asesor</div>
           <div class="sf-plan-price">A definir</div>
           <div class="sf-plan-period">mensual · o anual con descuento</div>
+          <div class="sf-plan-divider"></div>
           <ul class="sf-plan-items">
-            <li class="sf-plan-ok">✓ Todo el Plan Productor</li>
-            <li class="sf-plan-ok">✓ Hasta 20 campos</li>
-            <li class="sf-plan-ok">✓ Vista consolidada</li>
-            <li class="sf-plan-ok">✓ Reportes por cliente</li>
-            <li class="sf-plan-ok">✓ Usuarios ilimitados</li>
-            <li class="sf-plan-ok">✓ Soporte prioritario</li>
+            <li class="sf-plan-ok">Todo el Plan Productor</li>
+            <li class="sf-plan-ok">Hasta 20 campos</li>
+            <li class="sf-plan-ok">Vista consolidada</li>
+            <li class="sf-plan-ok">Reportes por cliente</li>
+            <li class="sf-plan-ok">Usuarios ilimitados</li>
+            <li class="sf-plan-ok">Soporte prioritario</li>
           </ul>
           <button class="sf-plan-btn sf-plan-btn-ghost" onclick="entrarApp()">Contactar</button>
         </div>
