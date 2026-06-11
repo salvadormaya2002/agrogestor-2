@@ -672,131 +672,99 @@ Cuando suplementás, el animal come menos pasto del campo. Eso libera capacidad 
 <div id="mod-comunidad" class="modulo animate-in">
 <div style="margin-bottom:16px;">
   <h2 style="font-size:20px;font-weight:500;margin-bottom:4px;">🌐 Comunidad de productores</h2>
-  <p style="font-size:13px;color:var(--gris-500);">Compartí tus indicadores, compará con otros productores y participá del chat técnico. Tus datos personales nunca se comparten — solo los indicadores que vos elegís.</p>
+  <p style="font-size:13px;color:var(--gris-500);">Compará tus indicadores con otros productores. Tus datos personales nunca se comparten — solo lo que vos elegís publicar.</p>
 </div>
 
-<!-- TABS -->
 <div class="tab-bar" style="margin-bottom:16px;">
-  <button class="tab-btn active" onclick="switchTab('comunidad','benchmarking')">📊 Mi posición</button>
+  <button class="tab-btn active" onclick="switchTab('comunidad','comparar')">📊 Comparar</button>
   <button class="tab-btn" onclick="switchTab('comunidad','chat')">💬 Chat técnico</button>
-  <button class="tab-btn" onclick="switchTab('comunidad','compartir')">⚙️ Qué comparto</button>
+  <button class="tab-btn" onclick="switchTab('comunidad','publicar')">📤 Publicar mis datos</button>
 </div>
 
-<!-- TAB 1: BENCHMARKING REAL -->
-<div id="tab-comunidad-benchmarking" class="tab-panel active">
-  <div class="grid-2" style="margin-bottom:14px;">
-    <!-- Mi posición -->
-    <div class="card">
-      <div class="card-title">Mis indicadores vs la comunidad</div>
-      <div id="com-mis-indicadores">
-        <div style="text-align:center;padding:20px;color:var(--gris-500);">
-          <div style="font-size:32px;margin-bottom:8px;">📊</div>
-          <p style="font-size:13px;">Cargá tus datos en Servicios y Tactos para ver tu posición en la comunidad.</p>
-        </div>
-      </div>
-    </div>
-    <!-- Stats comunidad -->
-    <div class="card">
-      <div class="card-title">Promedios de la comunidad — tiempo real</div>
-      <div id="com-stats-comunidad">
-        <div style="text-align:center;padding:20px;">
-          <div style="font-size:24px;margin-bottom:8px;">⏳</div>
-          <p style="font-size:13px;color:var(--gris-500);">Cargando datos de la comunidad...</p>
-        </div>
-      </div>
-    </div>
+<!-- TAB 1: COMPARAR -->
+<div id="tab-comunidad-comparar" class="tab-panel active">
+
+  <!-- Mis métricas vs comunidad -->
+  <div id="com-mis-metricas" style="margin-bottom:16px;"></div>
+
+  <!-- Gráfico de barras comparativo -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">Comparación visual — preñez de todos los productores</div>
+    <div id="com-grafico" style="padding:10px 0;"></div>
   </div>
-  <!-- Tabla de posición -->
+
+  <!-- Tabla completa -->
   <div class="card">
-    <div class="card-title">Ranking de productores — indicadores compartidos</div>
-    <div id="com-ranking">
-      <div style="text-align:center;padding:20px;color:var(--gris-500);">Cargando...</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div class="card-title" style="margin-bottom:0;">Tabla de productores</div>
+      <button class="btn-secondary" style="font-size:11px;padding:5px 12px;" onclick="cargarComunidad()">🔄 Actualizar</button>
     </div>
+    <div id="com-tabla" style="overflow-x:auto;"></div>
   </div>
 </div>
 
-<!-- TAB 2: CHAT TÉCNICO -->
+<!-- TAB 2: CHAT -->
 <div id="tab-comunidad-chat" class="tab-panel">
   <div class="alerta alerta-ok" style="margin-bottom:14px;">
-    Chat técnico entre productores ganaderos. Solo se muestra tu nombre de campo — no tu nombre personal. Podés hacer preguntas técnicas y compartir experiencias.
+    Chat técnico entre productores. Solo se muestra tu nombre de campo — nunca tu nombre personal.
   </div>
-
-  <!-- Mensajes -->
-  <div id="com-chat-mensajes" style="background:var(--gris-100);border-radius:var(--radius);padding:16px;height:340px;overflow-y:auto;margin-bottom:12px;display:flex;flex-direction:column;gap:10px;">
+  <div id="com-chat-mensajes" style="background:var(--gris-100);border-radius:var(--radius);padding:16px;height:360px;overflow-y:auto;margin-bottom:12px;display:flex;flex-direction:column;gap:10px;">
     <div style="text-align:center;color:var(--gris-500);font-size:13px;padding:20px;">Cargando mensajes...</div>
   </div>
-
-  <!-- Input -->
   <div style="display:flex;gap:10px;align-items:flex-end;">
     <div style="flex:1;">
       <div style="font-size:11px;color:var(--gris-500);margin-bottom:4px;">Enviando como: <strong id="com-nombre-campo">Mi campo</strong></div>
-      <textarea id="com-msg-input" placeholder="Escribí tu pregunta o comentario técnico..." 
-        style="width:100%;padding:10px 12px;border:1px solid var(--gris-300);border-radius:var(--radius);font-family:var(--font);font-size:14px;resize:none;height:60px;outline:none;"
+      <textarea id="com-msg-input" placeholder="Escribí tu pregunta o comentario técnico..."
+        style="width:100%;padding:10px 12px;border:1px solid var(--gris-300);border-radius:var(--radius);font-family:var(--font);font-size:14px;resize:none;height:60px;outline:none;box-sizing:border-box;"
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMensajeComunidad();}"></textarea>
     </div>
-    <button class="btn-primary" onclick="enviarMensajeComunidad()" style="padding:10px 20px;height:60px;">
-      Enviar
-    </button>
+    <button class="btn-primary" onclick="enviarMensajeComunidad()" style="padding:10px 20px;height:60px;">Enviar</button>
   </div>
 </div>
 
-<!-- TAB 3: QUÉ COMPARTO -->
-<div id="tab-comunidad-compartir" class="tab-panel">
+<!-- TAB 3: PUBLICAR -->
+<div id="tab-comunidad-publicar" class="tab-panel">
   <div class="alerta alerta-ok" style="margin-bottom:14px;">
-    Elegís exactamente qué datos compartís con la comunidad. Nunca se comparte tu nombre, ubicación exacta ni datos económicos sin tu autorización explícita.
+    Elegís exactamente qué compartís. Nadie ve tu nombre real ni tus datos económicos sin tu autorización.
   </div>
+
   <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">Datos que podés compartir</div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
-        <input type="checkbox" id="com-share-prenez" checked onchange="guardarPreferenciasCompartir()" style="width:18px;height:18px;accent-color:var(--verde);">
-        <div>
-          <div style="font-size:14px;font-weight:500;">Tasa de preñez</div>
-          <div style="font-size:12px;color:var(--gris-500);">Permite compararte con productores de tu región</div>
-        </div>
+    <div class="card-title">Nombre público en la comunidad</div>
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px;">
+      <input type="text" id="com-nombre-publico" placeholder="Ej: La Mariana — Gualeguaychú"
+        style="flex:1;padding:9px 12px;border:1px solid var(--gris-300);border-radius:var(--radius);font-size:14px;">
+    </div>
+    <div style="font-size:11px;color:var(--gris-500);">Este es el nombre que ven los demás. Sin datos personales.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">¿Qué datos compartís?</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px;background:var(--gris-100);border-radius:var(--radius);">
+        <input type="checkbox" id="com-share-prenez" checked style="width:16px;height:16px;accent-color:var(--verde);">
+        <div><div style="font-size:13px;font-weight:500;">Preñez y destete</div><div style="font-size:11px;color:var(--gris-500);">Tasa de preñez y destete del último tacto</div></div>
       </label>
-      <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
-        <input type="checkbox" id="com-share-destete" checked onchange="guardarPreferenciasCompartir()" style="width:18px;height:18px;accent-color:var(--verde);">
-        <div>
-          <div style="font-size:14px;font-weight:500;">Tasa de destete</div>
-          <div style="font-size:12px;color:var(--gris-500);">Indicador clave de eficiencia productiva</div>
-        </div>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px;background:var(--gris-100);border-radius:var(--radius);">
+        <input type="checkbox" id="com-share-rodeo" checked style="width:16px;height:16px;accent-color:var(--verde);">
+        <div><div style="font-size:13px;font-weight:500;">Composición del rodeo</div><div style="font-size:11px;color:var(--gris-500);">Vacas, toros, terneros, vaquillonas</div></div>
       </label>
-      <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
-        <input type="checkbox" id="com-share-kg" onchange="guardarPreferenciasCompartir()" style="width:18px;height:18px;accent-color:var(--verde);">
-        <div>
-          <div style="font-size:14px;font-weight:500;">Kg carne / ha</div>
-          <div style="font-size:12px;color:var(--gris-500);">Productividad por hectárea</div>
-        </div>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px;background:var(--gris-100);border-radius:var(--radius);">
+        <input type="checkbox" id="com-share-economia" style="width:16px;height:16px;accent-color:var(--verde);">
+        <div><div style="font-size:13px;font-weight:500;">Economía (margen bruto y rentabilidad)</div><div style="font-size:11px;color:var(--gris-500);">Solo los porcentajes, nunca los montos exactos</div></div>
       </label>
-      <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
-        <input type="checkbox" id="com-share-region" checked onchange="guardarPreferenciasCompartir()" style="width:18px;height:18px;accent-color:var(--verde);">
-        <div>
-          <div style="font-size:14px;font-weight:500;">Región / Subregión</div>
-          <div style="font-size:12px;color:var(--gris-500);">Para compararte con productores de tu zona</div>
-        </div>
-      </label>
-      <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
-        <input type="checkbox" id="com-share-sistema" checked onchange="guardarPreferenciasCompartir()" style="width:18px;height:18px;accent-color:var(--verde);">
-        <div>
-          <div style="font-size:14px;font-weight:500;">Sistema productivo</div>
-          <div style="font-size:12px;color:var(--gris-500);">Cría, recría, invernada, mixto</div>
-        </div>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px;background:var(--gris-100);border-radius:var(--radius);">
+        <input type="checkbox" id="com-share-region" checked style="width:16px;height:16px;accent-color:var(--verde);">
+        <div><div style="font-size:13px;font-weight:500;">Región y sistema productivo</div><div style="font-size:11px;color:var(--gris-500);">Para compararte con productores de tu zona</div></div>
       </label>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">Tu nombre en la comunidad</div>
-    <div style="display:flex;gap:10px;align-items:center;">
-      <input type="text" id="com-nombre-publico" placeholder="Ej: La Mariana — Gualeguaychú" 
-        style="flex:1;padding:9px 12px;border:1px solid var(--gris-300);border-radius:var(--radius);font-size:14px;"
-        oninput="guardarPreferenciasCompartir()">
-      <button class="btn-primary" onclick="publicarDatosCompartidos()">Publicar mis datos</button>
-    </div>
-    <div style="font-size:11px;color:var(--gris-500);margin-top:6px;">Este es el nombre que ven los demás productores. Sin datos personales.</div>
-  </div>
+  <button class="btn-primary" style="width:100%;padding:14px;font-size:15px;" onclick="publicarDatosCompartidos()">
+    📤 Publicar mis datos en la comunidad
+  </button>
+  <div id="com-pub-status" style="margin-top:10px;"></div>
 </div>
+
 </div>
 
 
@@ -4371,129 +4339,98 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ═══════════════════════════════════════════════════
-// MÓDULO COMUNIDAD — Base de datos real con API Anthropic
-// Usa el storage persistente de artifacts para compartir datos
+// MÓDULO COMUNIDAD — Firebase Firestore
 // ═══════════════════════════════════════════════════
 
-const COMUNIDAD_KEY_DATOS   = 'comunidad-productores';
-const COMUNIDAD_KEY_CHAT    = 'comunidad-chat';
-const API_URL = 'https://api.anthropic.com/v1/messages';
+// Construir objeto de datos a publicar
+function buildDatosPublicar() {
+  const user = getUser();
+  if(!user) return null;
 
-// ID único del productor (se genera una vez y se guarda)
-function getProductorId() {
-  let id = localStorage.getItem('agrogestor-productor-id');
-  if(!id) {
-    id = 'prod-' + Math.random().toString(36).substr(2,9) + '-' + Date.now().toString(36);
-    localStorage.setItem('agrogestor-productor-id', id);
-  }
-  return id;
-}
+  const nombre = document.getElementById('com-nombre-publico')?.value?.trim()
+    || user.displayName || perfil.campo || 'Productor anónimo';
 
-// Preferencias de compartir
-function guardarPreferenciasCompartir() {
-  const prefs = {
-    prenez:  document.getElementById('com-share-prenez')?.checked,
-    destete: document.getElementById('com-share-destete')?.checked,
-    kg:      document.getElementById('com-share-kg')?.checked,
-    region:  document.getElementById('com-share-region')?.checked,
-    sistema: document.getElementById('com-share-sistema')?.checked,
-    nombre:  document.getElementById('com-nombre-publico')?.value || perfil.campo || 'Productor anónimo',
-  };
-  localStorage.setItem('com-prefs', JSON.stringify(prefs));
-}
+  // Preñez del último tacto
+  const srv = (typeof servicios !== 'undefined') ? servicios : [];
+  const ultimoTacto = srv.filter(s => s.prenez).sort((a,b) => (b.id||0)-(a.id||0))[0];
+  const prenez = ultimoTacto ? parseFloat(ultimoTacto.prenez) : null;
+  const destete = ultimoTacto ? parseFloat(ultimoTacto.destete||0) : null;
 
-function getPreferenciasCompartir() {
-  try {
-    return JSON.parse(localStorage.getItem('com-prefs')) || { prenez:true, destete:true, kg:false, region:true, sistema:true, nombre: perfil.campo || 'Productor anónimo' };
-  } catch { return { prenez:true, destete:true, kg:false, region:true, sistema:true, nombre: 'Productor anónimo' }; }
-}
+  // Composición del rodeo
+  const vacas      = animales.filter(a => a.categoria==='Vaca'       && a.estado!=='Muerto' && a.estado!=='Vendido').length;
+  const toros      = animales.filter(a => a.categoria==='Toro'       && a.estado!=='Muerto' && a.estado!=='Vendido').length;
+  const terneros   = animales.filter(a => a.categoria==='Ternero'    && a.estado!=='Muerto' && a.estado!=='Vendido').length;
+  const vaquillonas= animales.filter(a => a.categoria==='Vaquillona' && a.estado!=='Muerto' && a.estado!=='Vendido').length;
+  const totalRodeo = vacas + toros + terneros + vaquillonas;
 
-// Construir objeto de datos a compartir
-function buildDatosProductor() {
-  const prefs = getPreferenciasCompartir();
-  const id    = getProductorId();
-  const ts    = Date.now();
+  // Economía — solo porcentajes
+  const ingresos = (typeof movimientos !== 'undefined')
+    ? movimientos.filter(m=>m.tipo==='ingreso').reduce((s,m)=>s+(m.monto||0),0) : 0;
+  const costos   = (typeof movimientos !== 'undefined')
+    ? movimientos.filter(m=>m.tipo==='egreso').reduce((s,m)=>s+(m.monto||0),0) : 0;
+  const rentabilidad = ingresos > 0 ? Math.round((ingresos-costos)/ingresos*100) : null;
 
-  // Obtener indicadores del productor
-  const serviciosArr = (typeof servicios !== 'undefined') ? servicios : [];
-  const ultimoTacto  = serviciosArr.filter(s => s.prenez).sort((a,b) => b.id - a.id)[0];
-  const prenezReal   = ultimoTacto ? parseFloat(ultimoTacto.prenez) : null;
-
-  const vacas   = animales.filter(a => a.categoria==='Vaca' && a.estado!=='Muerto' && a.estado!=='Vendido').length;
-  const terneros = animales.filter(a => a.categoria==='Ternero' && a.estado!=='Muerto' && a.estado!=='Vendido').length;
-  const desteteReal = (vacas > 0 && terneros > 0) ? Math.round(terneros/vacas*100) : null;
+  const shareRodeo    = document.getElementById('com-share-rodeo')?.checked;
+  const shareEconomia = document.getElementById('com-share-economia')?.checked;
+  const shareRegion   = document.getElementById('com-share-region')?.checked;
+  const sharePrenez   = document.getElementById('com-share-prenez')?.checked;
 
   return {
-    id,
-    ts,
-    nombre:  prefs.nombre,
-    region:  prefs.region  ? (perfil.region  || 'Entre Ríos') : null,
-    sistema: prefs.sistema ? (perfil.sistema || 'Cría') : null,
-    prenez:  prefs.prenez  ? prenezReal : null,
-    destete: prefs.destete ? desteteReal : null,
-    ha:      perfil.ha || null,
-    raza:    perfil.raza || 'Aberdeen Angus',
+    uid:    user.uid,
+    nombre,
+    ts:     Date.now(),
+    // Reproductivos
+    prenez:   sharePrenez  ? prenez   : null,
+    destete:  sharePrenez  ? destete  : null,
+    // Rodeo
+    vacas:       shareRodeo ? vacas       : null,
+    toros:       shareRodeo ? toros       : null,
+    terneros:    shareRodeo ? terneros    : null,
+    vaquillonas: shareRodeo ? vaquillonas : null,
+    totalRodeo:  shareRodeo ? totalRodeo  : null,
+    // Economía
+    rentabilidad: shareEconomia ? rentabilidad : null,
+    // Info general
+    region:  shareRegion ? (perfil.region || perfil.depto || 'Entre Ríos') : null,
+    sistema: shareRegion ? (perfil.sistema || 'Cría + Recría') : null,
+    raza:    shareRegion ? (perfil.raza    || 'Aberdeen Angus') : null,
+    ha:      perfil.ha   || null,
   };
 }
 
-// ── PUBLICAR datos a la base compartida ──
 async function publicarDatosCompartidos() {
-  // Verificar Firebase disponible
-  if(!window._db) { mostrarToast('Conectando con la base de datos...', 'warn'); return; }
-  
+  if(!window._db) { mostrarToast('Sin conexión a la base de datos', 'error'); return; }
   const user = getUser();
-  if(!user) { 
-    mostrarToast('Necesitás iniciar sesión primero', 'error'); 
-    mostrarAuthModal();
-    return; 
-  }
+  if(!user) { mostrarToast('Necesitás iniciar sesión', 'error'); mostrarAuthModal(); return; }
 
-  const btnPublicar = document.querySelector('[onclick="publicarDatosCompartidos()"]');
-  if(btnPublicar) { btnPublicar.textContent = 'Publicando...'; btnPublicar.disabled = true; }
+  const statusEl = document.getElementById('com-pub-status');
+  const btnEl = document.querySelector('[onclick="publicarDatosCompartidos()"]');
+  if(btnEl) { btnEl.textContent = '⏳ Publicando...'; btnEl.disabled = true; }
+  if(statusEl) statusEl.innerHTML = '';
 
   try {
-    const nombre = document.getElementById('com-nombre-publico')?.value?.trim() 
-      || user.displayName 
-      || perfil.campo 
-      || 'Mi campo';
-
-    // Obtener preñez del último tacto
-    const serviciosArr = (typeof servicios !== 'undefined') ? servicios : [];
-    const ultimoTacto = serviciosArr.filter(s => s.prenez).sort((a,b) => (b.id||0)-(a.id||0))[0];
-    const prenezReal = ultimoTacto ? parseFloat(ultimoTacto.prenez) : null;
-
-    // Obtener destete
-    const vacas = animales.filter(a => a.categoria==='Vaca' && a.estado!=='Muerto' && a.estado!=='Vendido').length;
-    const terneros = animales.filter(a => a.categoria==='Ternero').length;
-    const desteteReal = (vacas > 0 && terneros > 0) ? Math.round(terneros/vacas*100) : null;
-
-    const datos = {
-      uid:      user.uid,
-      nombre,
-      region:   perfil.region  || perfil.depto || 'Entre Ríos',
-      sistema:  perfil.sistema || 'Cría + Recría',
-      raza:     perfil.raza    || 'Aberdeen Angus',
-      ha:       perfil.ha      || null,
-      prenez:   prenezReal,
-      destete:  desteteReal,
-      ts:       Date.now(),
-      actualizadoEn: new Date().toISOString(),
-    };
+    const datos = buildDatosPublicar();
+    if(!datos) throw new Error('No se pudieron obtener los datos');
 
     await window._db.collection('comunidad').doc(user.uid).set(datos);
-    mostrarToast('✓ Tus datos fueron publicados en la comunidad', 'ok');
-    cargarComunidad();
-    // Ir a la tab de benchmarking para ver el resultado
-    switchTab('comunidad', 'benchmarking');
+
+    if(statusEl) statusEl.innerHTML = '<div class="alerta alerta-ok">✓ Datos publicados correctamente. Ya aparecés en la comunidad.</div>';
+    mostrarToast('✓ Publicado en la comunidad', 'ok');
+
+    // Ir a comparar
+    setTimeout(() => {
+      switchTab('comunidad', 'comparar');
+      cargarComunidad();
+    }, 1000);
   } catch(e) {
     console.error('Error publicando:', e);
-    mostrarToast('Error: ' + e.message, 'error');
+    if(statusEl) statusEl.innerHTML = `<div class="alerta alerta-bad">✗ Error: ${e.message}</div>`;
+    mostrarToast('Error al publicar: ' + e.message, 'error');
   } finally {
-    if(btnPublicar) { btnPublicar.textContent = 'Publicar mis datos'; btnPublicar.disabled = false; }
+    if(btnEl) { btnEl.textContent = '📤 Publicar mis datos en la comunidad'; btnEl.disabled = false; }
   }
 }
 
-// ── CARGAR datos de la comunidad ──
 async function cargarComunidad() {
   if(!window._db) return;
   try {
@@ -4502,121 +4439,191 @@ async function cargarComunidad() {
     const productores = [];
     snap.forEach(d => {
       const p = d.data();
-      const ts = p.ts || 0;
-      if(ahora - ts < 90 * 24 * 60 * 60 * 1000) productores.push(p);
+      // Solo últimos 90 días
+      if(ahora - (p.ts||0) < 90*24*60*60*1000) productores.push(p);
     });
-    renderBenchmarking(productores);
-    renderRanking(productores);
+    renderTablaProductores(productores);
+    renderGrafico(productores);
+    renderMisMetricas(productores);
   } catch(e) {
-    console.error('cargarComunidad:', e);
-    document.getElementById('com-stats-comunidad').innerHTML =
-      '<div style="padding:14px;color:var(--gris-500);font-size:13px;">Sin conexión a la comunidad en este momento.</div>';
+    console.error('cargarComunidad error:', e);
+    const el = document.getElementById('com-tabla');
+    if(el) el.innerHTML = '<div style="padding:14px;color:var(--gris-500);font-size:13px;">Error cargando la comunidad. Revisá tu conexión.</div>';
   }
 }
 
-function renderBenchmarking(productores) {
-  const el = document.getElementById('com-stats-comunidad');
+function renderMisMetricas(productores) {
+  const el = document.getElementById('com-mis-metricas');
   if(!el) return;
+  const user = getUser();
+  const miId = user?.uid;
+  const yo = productores.find(p => p.uid === miId);
+  const conPrenez = productores.filter(p => p.prenez != null);
+  const promPrenez = conPrenez.length > 0
+    ? Math.round(conPrenez.reduce((s,p)=>s+p.prenez,0)/conPrenez.length) : null;
 
-  const conPrenez  = productores.filter(p => p.prenez != null);
-  const conDestete = productores.filter(p => p.destete != null);
+  if(!yo) {
+    el.innerHTML = `<div class="alerta alerta-warn">⚠ Todavía no publicaste tus datos. Andá a la pestaña <strong>📤 Publicar mis datos</strong> para aparecer en la comunidad.</div>`;
+    return;
+  }
 
-  const promPrenez  = conPrenez.length  > 0 ? Math.round(conPrenez.reduce((s,p)=>s+p.prenez,0)  / conPrenez.length)  : null;
-  const promDestete = conDestete.length > 0 ? Math.round(conDestete.reduce((s,p)=>s+p.destete,0) / conDestete.length) : null;
-
-  // Mis datos
-  const misPrfs = getPreferenciasCompartir();
-  const serviciosArr = (typeof servicios !== 'undefined') ? servicios : [];
-  const miTacto = serviciosArr.filter(s => s.prenez).sort((a,b) => b.id - a.id)[0];
-  const miPrenez = miTacto ? parseFloat(miTacto.prenez) : null;
-
+  const diff = yo.prenez != null && promPrenez != null ? yo.prenez - promPrenez : null;
   el.innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-      <div style="background:var(--gris-100);border-radius:var(--radius);padding:12px;">
-        <div style="font-size:10px;color:var(--gris-500);margin-bottom:4px;">Productores activos</div>
-        <div style="font-size:28px;font-weight:500;color:var(--verde);">${productores.length}</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:4px;">
+      <div class="metric-card">
+        <div class="metric-label">Productores en la comunidad</div>
+        <div class="metric-val metric-ok">${productores.length}</div>
       </div>
-      <div style="background:var(--gris-100);border-radius:var(--radius);padding:12px;">
-        <div style="font-size:10px;color:var(--gris-500);margin-bottom:4px;">Prom. preñez comunidad</div>
-        <div style="font-size:28px;font-weight:500;color:var(--verde);">${promPrenez != null ? promPrenez+'%' : '—'}</div>
+      <div class="metric-card">
+        <div class="metric-label">Prom. preñez comunidad</div>
+        <div class="metric-val ${promPrenez>=82?'metric-ok':'metric-warn'}">${promPrenez!=null?promPrenez+'%':'—'}</div>
+        <div class="metric-sub">Ref. INTA: 82%</div>
       </div>
-    </div>
-    ${miPrenez != null && promPrenez != null ? `
-    <div style="background:${miPrenez >= promPrenez ? 'var(--verde-light)' : 'var(--amarillo-light)'};border-radius:var(--radius);padding:12px;">
-      <div style="font-size:12px;font-weight:500;color:${miPrenez >= promPrenez ? 'var(--verde-dark)' : '#7A5200'};">
-        Tu preñez (${miPrenez}%) está ${miPrenez >= promPrenez ? Math.round(miPrenez-promPrenez)+' puntos sobre' : Math.round(promPrenez-miPrenez)+' puntos bajo'} el promedio de la comunidad (${promPrenez}%)
+      <div class="metric-card">
+        <div class="metric-label">Tu preñez</div>
+        <div class="metric-val ${yo.prenez>=82?'metric-ok':'metric-warn'}">${yo.prenez!=null?yo.prenez+'%':'—'}</div>
       </div>
-    </div>` : '<div style="font-size:12px;color:var(--gris-500);">Cargá tu preñez en Servicios y Tactos para compararte.</div>'}
-    <div style="font-size:10px;color:var(--gris-500);margin-top:8px;">
-      Datos de la comunidad + Referencia INTA Entre Ríos: preñez 82% · destete 78%
+      <div class="metric-card">
+        <div class="metric-label">Tu posición</div>
+        <div class="metric-val ${diff!=null&&diff>=0?'metric-ok':'metric-warn'}">
+          ${diff!=null?(diff>=0?'+'+diff+'pp arriba':diff+'pp abajo'):'—'}
+        </div>
+        <div class="metric-sub">vs promedio comunidad</div>
+      </div>
     </div>`;
 }
 
-function renderRanking(productores) {
-  const el = document.getElementById('com-ranking');
+function renderGrafico(productores) {
+  const el = document.getElementById('com-grafico');
   if(!el) return;
+  const user = getUser();
+  const miId = user?.uid;
 
-  if(productores.length === 0) {
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gris-500);font-size:13px;">Todavía no hay productores en la comunidad. Sé el primero en publicar tus datos.</div>';
+  const conPrenez = productores.filter(p => p.prenez != null)
+    .sort((a,b) => b.prenez - a.prenez);
+
+  if(conPrenez.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gris-500);font-size:13px;">No hay datos de preñez publicados todavía.</div>';
     return;
   }
 
-  const sorted = [...productores].filter(p => p.prenez != null).sort((a,b) => b.prenez - a.prenez);
-  const miId = getProductorId();
+  const max = Math.max(...conPrenez.map(p=>p.prenez), 100);
+  const barras = conPrenez.map(p => {
+    const esMio = p.uid === miId;
+    const pct = Math.round(p.prenez/max*100);
+    const color = esMio ? '#1D9E75' : (p.prenez>=82?'#5DCAA5':'#EF9F27');
+    return `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="width:140px;font-size:12px;color:${esMio?'#0F5C44':'#444441'};font-weight:${esMio?'600':'400'};
+          white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${p.nombre}">
+          ${esMio?'→ ':''} ${p.nombre}
+        </div>
+        <div style="flex:1;background:#F0EFEB;border-radius:4px;height:28px;position:relative;">
+          <div style="width:${pct}%;background:${color};height:28px;border-radius:4px;
+            display:flex;align-items:center;justify-content:flex-end;padding-right:8px;
+            transition:width .5s;min-width:40px;">
+            <span style="font-size:12px;font-weight:600;color:white;">${p.prenez}%</span>
+          </div>
+        </div>
+        ${p.totalRodeo ? `<div style="font-size:11px;color:#888780;min-width:60px;">${p.totalRodeo} cab.</div>` : '<div style="min-width:60px;"></div>'}
+      </div>`;
+  }).join('');
+
+  // Línea de referencia INTA
+  const refPct = Math.round(82/max*100);
+  el.innerHTML = `
+    <div style="position:relative;margin-bottom:8px;">
+      <div style="font-size:11px;color:#888780;margin-bottom:10px;">
+        🟢 Verde = sobre promedio INTA (82%) · 🟡 Amarillo = bajo promedio · 🟢 Oscuro = tu campo
+      </div>
+      ${barras}
+    </div>`;
+}
+
+function renderTablaProductores(productores) {
+  const el = document.getElementById('com-tabla');
+  if(!el) return;
+  const user = getUser();
+  const miId = user?.uid;
+
+  if(productores.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gris-500);">Todavía no hay productores. Sé el primero en publicar tus datos.</div>';
+    return;
+  }
+
+  const sorted = [...productores].sort((a,b) => (b.prenez||0)-(a.prenez||0));
 
   el.innerHTML = `<table>
     <thead><tr>
-      <th>#</th><th>Campo</th><th>Región</th><th>Sistema</th>
-      <th style="text-align:right">Preñez</th><th style="text-align:right">Destete</th>
+      <th>#</th>
+      <th>Campo</th>
+      <th>Región</th>
+      <th>Sistema</th>
+      <th style="text-align:right">Preñez</th>
+      <th style="text-align:right">Destete</th>
+      <th style="text-align:right">Rodeo total</th>
+      <th style="text-align:right">Vacas</th>
+      <th style="text-align:right">Terneros</th>
+      <th style="text-align:right">Rentab.</th>
     </tr></thead>
     <tbody>
-    ${sorted.map((p,i) => `
-      <tr style="${p.id === miId ? 'background:var(--verde-light);font-weight:500;' : i%2===0 ? 'background:var(--gris-100);' : ''}">
-        <td style="color:var(--gris-500);font-size:12px;">${i+1}${p.id===miId ? ' ← vos' : ''}</td>
-        <td style="font-size:13px;">${p.nombre || 'Anónimo'}</td>
-        <td style="font-size:12px;color:var(--gris-500);">${p.region || '—'}</td>
-        <td style="font-size:12px;color:var(--gris-500);">${p.sistema || '—'}</td>
-        <td style="text-align:right;font-weight:500;color:${p.prenez>=82?'var(--verde)':'var(--amarillo)'};">${p.prenez != null ? p.prenez+'%' : '—'}</td>
-        <td style="text-align:right;color:var(--gris-500);">${p.destete != null ? p.destete+'%' : '—'}</td>
-      </tr>`).join('')}
+    ${sorted.map((p,i) => {
+      const esMio = p.uid === miId;
+      const bg = esMio ? 'background:var(--verde-light);font-weight:500;' : i%2===0?'background:var(--gris-100);':'';
+      return `<tr style="${bg}">
+        <td style="font-size:12px;color:var(--gris-500);">${i+1}${esMio?' ←':''}</td>
+        <td style="font-size:13px;">${p.nombre||'Anónimo'}</td>
+        <td style="font-size:12px;color:var(--gris-500);">${p.region||'—'}</td>
+        <td style="font-size:12px;color:var(--gris-500);">${p.sistema||'—'}</td>
+        <td style="text-align:right;font-weight:500;color:${(p.prenez||0)>=82?'var(--verde)':'var(--amarillo)'};">
+          ${p.prenez!=null?p.prenez+'%':'—'}</td>
+        <td style="text-align:right;color:var(--gris-500);">${p.destete!=null?p.destete+'%':'—'}</td>
+        <td style="text-align:right;">${p.totalRodeo!=null?p.totalRodeo+' cab.':'—'}</td>
+        <td style="text-align:right;color:var(--gris-500);">${p.vacas!=null?p.vacas:'—'}</td>
+        <td style="text-align:right;color:var(--gris-500);">${p.terneros!=null?p.terneros:'—'}</td>
+        <td style="text-align:right;color:${(p.rentabilidad||0)>20?'var(--verde)':'var(--gris-500)'};">
+          ${p.rentabilidad!=null?p.rentabilidad+'%':'—'}</td>
+      </tr>`;
+    }).join('')}
     </tbody>
   </table>
-  <div style="font-size:10px;color:var(--gris-500);margin-top:8px;">Referencia INTA Entre Ríos: preñez 82% · destete 78% · mortandad 2.5%</div>`;
+  <div style="font-size:10px;color:var(--gris-500);margin-top:8px;">
+    Referencia INTA Entre Ríos: preñez 82% · destete 78% · ← indica tu campo
+  </div>`;
 }
 
-// ── CHAT TÉCNICO ──
+// Chat
 async function cargarChatComunidad() {
   const el = document.getElementById('com-chat-mensajes');
-  if(!el) return;
+  if(!el || !window._db) return;
   try {
     const snap = await window._db.collection('chat')
-      .orderBy('ts', 'asc').limitToLast(100).get();
+      .orderBy('ts','asc').limitToLast(80).get();
     const mensajes = [];
     snap.forEach(d => mensajes.push(d.data()));
-    renderMensajes(mensajes);
+    renderMensajesChat(mensajes);
   } catch(e) {
     console.error('cargarChat:', e);
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gris-500);font-size:13px;">Sin conexión al chat en este momento.</div>';
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gris-500);">Error cargando el chat.</div>';
   }
 }
 
-function renderMensajes(mensajes) {
+function renderMensajesChat(mensajes) {
   const el = document.getElementById('com-chat-mensajes');
   if(!el) return;
-  const miId = getProductorId();
-  const prefs = getPreferenciasCompartir();
+  const miId = getUser()?.uid;
 
   if(mensajes.length === 0) {
-    el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gris-500);font-size:13px;">Todavía no hay mensajes. ¡Sé el primero en preguntar!</div>';
+    el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gris-500);font-size:13px;">Todavía no hay mensajes. ¡Sé el primero!</div>';
     return;
   }
 
-  el.innerHTML = mensajes.slice(-50).map(m => {
+  el.innerHTML = mensajes.map(m => {
     const esMio = m.autorId === miId;
-    const fecha = new Date(m.ts).toLocaleDateString('es-AR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    const fecha = new Date(m.ts).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
     return `
       <div style="display:flex;flex-direction:column;align-items:${esMio?'flex-end':'flex-start'};">
-        <div style="font-size:10px;color:var(--gris-500);margin-bottom:2px;">${m.autor} · ${fecha}</div>
+        <div style="font-size:10px;color:var(--gris-500);margin-bottom:2px;">${m.autor||'Anónimo'} · ${fecha}</div>
         <div style="background:${esMio?'var(--verde)':'white'};color:${esMio?'white':'var(--gris-900)'};
           padding:8px 12px;border-radius:12px;max-width:75%;font-size:13px;line-height:1.4;
           border:${esMio?'none':'1px solid var(--gris-200)'};">
@@ -4628,29 +4635,50 @@ function renderMensajes(mensajes) {
 }
 
 async function enviarMensajeComunidad() {
+  if(!window._db) { mostrarToast('Sin conexión', 'error'); return; }
   const user = getUser();
   if(!user) { mostrarToast('Necesitás iniciar sesión', 'error'); return; }
-
   const input = document.getElementById('com-msg-input');
   const texto = input?.value?.trim();
   if(!texto) return;
 
-  const prefs = getPreferenciasCompartir();
-  const msg = {
-    autorId: user.uid,
-    autor:   user.displayName || prefs.nombre || 'Productor anónimo',
-    texto,
-    ts:      Date.now(),
-  };
+  const nombre = document.getElementById('com-nombre-publico')?.value?.trim()
+    || user.displayName || 'Productor anónimo';
 
   try {
-    await window._db.collection('chat').add(msg);
+    await window._db.collection('chat').add({
+      autorId: user.uid,
+      autor:   nombre,
+      texto,
+      ts: Date.now(),
+    });
     if(input) input.value = '';
     cargarChatComunidad();
   } catch(e) {
     mostrarToast('Error al enviar: ' + e.message, 'error');
   }
 }
+
+async function initComunidad() {
+  // Precargar nombre
+  const user = getUser();
+  const nombreInput = document.getElementById('com-nombre-publico');
+  const nombreChat  = document.getElementById('com-nombre-campo');
+  const nombre = user?.displayName || perfil.campo || '';
+  if(nombreInput && !nombreInput.value) nombreInput.value = nombre;
+  if(nombreChat) nombreChat.textContent = nombre || 'Mi campo';
+
+  await cargarComunidad();
+  await cargarChatComunidad();
+
+  // Refrescar chat cada 20 segundos
+  if(window._chatInterval) clearInterval(window._chatInterval);
+  window._chatInterval = setInterval(() => {
+    const chatTab = document.getElementById('tab-comunidad-chat');
+    if(chatTab?.classList.contains('active')) cargarChatComunidad();
+  }, 20000);
+}
+
 
 // ── DIAGNÓSTICO AUTOMÁTICO COMPLETO ──
 function diagnosticarCampoCompleto() {
