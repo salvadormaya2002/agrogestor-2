@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Perfil público del usuario (solo lectura para otros)
+    match /usuarios/{uid} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Datos privados del productor — solo él
+    match /usuarios/{uid}/{coleccion}/{docId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Comunidad — cualquier auth puede leer, solo el dueño escribe el suyo
+    match /comunidad/{uid} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Chat — cualquier auth puede leer y crear (no editar ni borrar)
+    match /chat/{msgId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.autorId == request.auth.uid
+        && request.resource.data.texto.size() > 0
+        && request.resource.data.texto.size() < 1000;
+      allow update, delete: if false;
+    }
+  }
+}
