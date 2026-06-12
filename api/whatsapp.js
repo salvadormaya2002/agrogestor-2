@@ -27,22 +27,27 @@ function parsearMensaje(texto) {
   const fechaStr = hoy.toLocaleDateString('es-AR');
   const fecha    = hoy.toISOString().split('T')[0];
 
+  // Regex reutilizable: captura caravanas de 2-6 letras (AR-0045, TN-1234, etc.)
+  const CAR_RE = /[A-Za-z]{2,6}-?\d+/i;
+
   // Nacimiento
-  if (txt.match(/naci[oó]|nacimiento/) || (txt.includes('ternero') && txt.match(/naci|pari[oó]|naci/))) {
-    const carMatch = texto.match(/[A-Za-z]{2}-?\d+/i);
-    const madre    = carMatch ? carMatch[0].toUpperCase() : '';
-    const sexo     = txt.includes('macho') ? 'macho' : txt.includes('hembra') ? 'hembra' : '';
-    const nuevaCar = 'TERN-' + String(Date.now()).slice(-4);
+  if (txt.match(/naci[oó]|nacimiento/) || (txt.includes('ternero') && txt.match(/naci|pari[oó]/))) {
+    const carMatch  = texto.match(CAR_RE);
+    const madre     = carMatch ? carMatch[0].toUpperCase() : '';
+    const sexo      = txt.includes('macho') ? 'macho' : txt.includes('hembra') ? 'hembra' : '';
+    const pesoMatch = txt.match(/(\d+)\s*kg/);
+    const peso      = pesoMatch ? parseInt(pesoMatch[1]) : '';
+    const nuevaCar  = 'TN-' + String(Date.now()).slice(-4);
     return {
       tipo: 'nacimiento',
-      datos: { caravana: nuevaCar, madre, sexo, fecha },
-      respuesta: `✅ *Nacimiento registrado*\n🐄 Ternero${sexo ? ' ' + sexo : ''}${madre ? ' · Madre: ' + madre : ''}\n📟 Caravana: ${nuevaCar}\n📅 ${fechaStr}`
+      datos: { caravana: nuevaCar, madre, sexo, peso, fecha },
+      respuesta: `✅ *Nacimiento registrado*\n🐄 Ternero${sexo ? ' ' + sexo : ''}${madre ? ' · Madre: ' + madre : ''}${peso ? ' · ' + peso + ' kg' : ''}\n📟 Caravana: *${nuevaCar}*\n📅 ${fechaStr}`
     };
   }
 
   // Muerte / baja
   if (txt.match(/muri[oó]|muerte|muerto/) || (txt.includes('baja') && !txt.includes('trabajo'))) {
-    const carMatch = texto.match(/[A-Za-z]{2}-?\d+/i);
+    const carMatch = texto.match(CAR_RE);
     const caravana = carMatch ? carMatch[0].toUpperCase() : '';
     return {
       tipo: 'baja',
@@ -55,7 +60,7 @@ function parsearMensaje(texto) {
 
   // Peso
   if (txt.match(/pes[ao]/) || txt.match(/\d+\s*kg/)) {
-    const carMatch  = texto.match(/[A-Za-z]{2}-?\d+/i);
+    const carMatch  = texto.match(CAR_RE);
     const caravana  = carMatch ? carMatch[0].toUpperCase() : '';
     const pesoMatch = txt.match(/(\d+)\s*kg/);
     const peso      = pesoMatch ? parseInt(pesoMatch[1]) : 0;
@@ -70,7 +75,7 @@ function parsearMensaje(texto) {
 
   // Preñez / tacto
   if (txt.match(/prena[do]|preñ|tacto/)) {
-    const carMatch = texto.match(/[A-Za-z]{2}-?\d+/i);
+    const carMatch = texto.match(CAR_RE);
     const caravana = carMatch ? carMatch[0].toUpperCase() : '';
     const resultado = (txt.includes('vacia') || txt.includes('vació') || txt.includes('vacía')) ? 'vacia' : 'prenada';
     return {

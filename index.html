@@ -3993,7 +3993,7 @@ function aplicarDatosWA(msg){
   switch(msg.tipo){
     case 'nacimiento':
       if(d.caravana){
-        animales.push({ caravana:d.caravana, categoria:'Ternero', peso:'', fecha, estado:'Al pie',
+        animales.push({ caravana:d.caravana, categoria:'Ternero', peso: d.peso || '', fecha, estado:'Al pie',
           obs:'📱 WhatsApp' + (d.madre ? ' · Madre: '+d.madre : '') + (d.sexo ? ' · '+d.sexo : '') });
         triggerGuardar(); renderRodeo(); actualizarDashboard();
       }
