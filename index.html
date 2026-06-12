@@ -3944,6 +3944,7 @@ function renderWaRegistros(){
 // ===== WHATSAPP REAL — FIRESTORE LISTENER =====
 let _waListenerActivo = false;
 let _waUnsub = null;
+const _waMostrados = new Set();
 
 function iniciarEscuchaWA(){
   if(!window._db || !window._currentUser) return;
@@ -3956,15 +3957,16 @@ function iniciarEscuchaWA(){
   _waUnsub = window._db
     .collection('usuarios').doc(window._currentUser.uid)
     .collection('wa_mensajes')
-    .orderBy('timestamp','asc')
-    .limitToLast(50)
+    .orderBy('timestamp','desc')
+    .limit(30)
     .onSnapshot(function(snap){
       snap.docChanges().forEach(function(change){
         if(change.type !== 'added') return;
-        const msg = change.doc.data();
-        if(msg._yaRenderizado) return;
-        change.doc.ref.update({ _yaRenderizado: true }).catch(()=>{});
+        const id = change.doc.id;
+        if(_waMostrados.has(id)) return;
+        _waMostrados.add(id);
 
+        const msg = change.doc.data();
         const ts = msg.timestamp ? msg.timestamp.toDate() : new Date();
         const hora = ts.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
 
@@ -3973,7 +3975,13 @@ function iniciarEscuchaWA(){
 
         aplicarDatosWA(msg);
       });
-    }, function(err){ console.warn('WA listener error:', err); });
+    }, function(err){
+      console.warn('WA listener error:', err);
+      _waListenerActivo = false;
+      const indicador = document.getElementById('wa-estado-bot');
+      if(indicador) indicador.textContent = 'Sin conexión — reintentando...';
+      setTimeout(function(){ iniciarEscuchaWA(); }, 5000);
+    });
 }
 
 function aplicarDatosWA(msg){
@@ -3987,38 +3995,38 @@ function aplicarDatosWA(msg){
       if(d.caravana){
         animales.push({ caravana:d.caravana, categoria:'Ternero', peso:'', fecha, estado:'Al pie',
           obs:'📱 WhatsApp' + (d.madre ? ' · Madre: '+d.madre : '') + (d.sexo ? ' · '+d.sexo : '') });
-        guardarDatos(); renderRodeo(); actualizarDashboard();
+        triggerGuardar(); renderRodeo(); actualizarDashboard();
       }
       break;
     case 'baja':
       if(d.caravana){
         const idx = animales.findIndex(a => a.caravana.toUpperCase() === d.caravana);
-        if(idx !== -1){ animales[idx].estado = 'Muerto'; guardarDatos(); renderRodeo(); }
+        if(idx !== -1){ animales[idx].estado = 'Muerto'; triggerGuardar(); renderRodeo(); }
       }
       break;
     case 'peso':
       if(d.caravana && d.peso){
         const idx = animales.findIndex(a => a.caravana.toUpperCase() === d.caravana);
-        if(idx !== -1){ animales[idx].peso = d.peso; guardarDatos(); renderRodeo(); }
+        if(idx !== -1){ animales[idx].peso = d.peso; triggerGuardar(); renderRodeo(); }
       }
       break;
     case 'tacto':
       if(d.caravana){
         tactos.push({ caravana:d.caravana, fecha, resultado:d.resultado||'prenada', toro:'', celo:'1', parto:'',
           obs:'📱 WhatsApp' });
-        guardarDatos();
+        triggerGuardar();
       }
       break;
     case 'sanidad':
       sanidad.push({ fecha, tipo:'Antiparasitario', producto:d.producto||'', categoria:'Todo el rodeo',
         cantidad:d.cantidad||'', costo:'', estado:'Realizado', obs:'📱 WhatsApp' });
-      guardarDatos();
+      triggerGuardar();
       break;
     case 'lluvia':
       if(d.mm > 0){
         const mes = new Date(fecha).getMonth();
         lluvias[mes] = (lluvias[mes]||0) + d.mm;
-        guardarDatos();
+        triggerGuardar();
       }
       break;
     default:
